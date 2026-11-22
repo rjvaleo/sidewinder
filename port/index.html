@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SideWinder (1988 Amiga Rescue Port)</title>
+  <style>
+    :root {
+      --bg: #080b12;
+      --panel: #111827;
+      --border: #25324a;
+      --accent: #38bdf8;
+      --gold: #fbbf24;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #000;
+      color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      user-select: none;
+    }
+    body.playing { cursor: none; }
+    /* buttons and hints lie over the picture on the title, menu and pause screens, and hide while you fly */
+    .topbar, .footer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      z-index: 2;
+      padding: 8px 14px;
+      background: rgba(8, 11, 18, 0.82);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px 12px;
+      flex-wrap: wrap;
+    }
+    .topbar { top: 0; font-size: 13px; border-bottom: 1px solid var(--border); }
+    .footer { bottom: 0; font-size: 11px; color: var(--muted); border-top: 1px solid var(--border); }
+    body.playing .topbar, body.playing .footer { display: none; }
+    .title {
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+    }
+    .controls-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    button, select {
+      background: #1e293b;
+      color: var(--text);
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-family: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    button:hover, select:hover {
+      border-color: var(--accent);
+    }
+    button.active {
+      background: #0c4a6e;
+      border-color: var(--accent);
+      color: #fff;
+    }
+    #screen {
+      /* fills the window; game.js matches the picture's shape to the window's */
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: contain;
+      background: #000;
+      display: block;
+      outline: none;
+    }
+    .kbd {
+      color: var(--text);
+      background: #1e293b;
+      padding: 1px 5px;
+      border-radius: 4px;
+      border: 1px solid #334155;
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+      <div class="title">SIDEWINDER // AMIGA RESCUE PORT</div>
+      <div class="controls-row">
+        <label>
+          Stage:
+          <select id="levelSelect">
+            <option value="1">1 - Canyon Base</option>
+            <option value="2">2 - Reactor Trench</option>
+            <option value="3">3 - Desert Refinery</option>
+            <option value="4">4 - Orbital Foundry</option>
+            <option value="5">5 - Bio Fortress</option>
+            <option value="6">6 - Core Hive</option>
+          </select>
+        </label>
+        <label>
+          Difficulty:
+          <select id="diffSelect">
+            <option value="1">1 - Beginner</option>
+            <option value="2">2 - Novice</option>
+            <option value="3" selected>3 - Pilot</option>
+            <option value="4">4 - Ace</option>
+            <option value="5">5 - Master</option>
+          </select>
+        </label>
+        <button id="trainerBtn" title="Toggle infinite lives Trainer patch">Trainer: OFF</button>
+        <button id="sfxBtn" class="active">SFX: ON</button>
+        <button id="bgmBtn">Synth BGM: OFF</button>
+        <button id="joyBadge" type="button" title="Plug in a USB or Bluetooth joystick/gamepad and press any button">Joystick: Press button</button>
+        <button id="pauseBtn">Pause</button>
+        <button id="restartBtn">Title</button>
+        <button id="fullBtn" type="button" title="Fill the whole display (F)">Full screen</button>
+      </div>
+    </div>
+
+    <canvas id="screen" width="320" height="232" tabindex="0"></canvas>
+
+    <div class="footer">
+      <div>
+        Move: <span class="kbd">Arrows</span> / <span class="kbd">WASD</span> &nbsp;
+        Fire: <span class="kbd">Space</span> / <span class="kbd">Z</span> / <span class="kbd">Enter</span> &nbsp;
+        Bomb: <span class="kbd">B</span> &nbsp;
+        Nova: <span class="kbd">N</span> &nbsp;
+        Pause: <span class="kbd">P</span> &nbsp;
+        Full screen: <span class="kbd">F</span>
+      </div>
+      <div>Gamepad: Left Stick/D-Pad Move • Right Stick Aim &amp; Fire • A/B/X Fire Ahead • Triggers Bomb • L1/Y Nova • Start Pause • Select/Y Trainer</div>
+      <div id="statsNote" hidden>Anonymous play statistics (levels reached, scores) are collected with Google Analytics.</div>
+    </div>
+
+  <script src="assets_bundle.js"></script>
+  <script src="assets_sfx2.js"></script>
+  <script src="assets_hd.js"></script>
+  <script src="assets_hd_maps.js"></script>
+  <script src="assets_hd_fx.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
