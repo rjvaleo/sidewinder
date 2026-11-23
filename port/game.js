@@ -1473,9 +1473,9 @@
   // Levels 1 to 4 pay out as they always have. From level 5 on everything that is given away is a quarter
   // leaner: pick-ups dropped by enemies, pick-ups placed in the levels, and credits.
   const lean = () => (shownLevel() >= 5 ? 0.75 : 1);
-  // Power-ups are a further quarter scarcer on every level after the first: 0.75 on levels 2 to 4, and
-  // 0.75 of the already lean rate from level 5 on. Credits are not touched by this.
-  const scarce = () => lean() * (shownLevel() >= 2 ? 0.75 : 1);
+  // Power-ups are scarcer on every level after the first: a quarter off, then half of what is left, which is
+  // 0.375 on levels 2 to 4 and 0.28 from level 5 on (where the lean rate applies too). Credits are not touched.
+  const scarce = () => lean() * (shownLevel() >= 2 ? 0.75 * 0.5 : 1);
   // Which pick-up (if any) this enemy kill leaves. Each kind fills up by 1/N per kill (less after level one).
   function nextDrop() {
     const d = state.dropFill;
